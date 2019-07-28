@@ -5,7 +5,7 @@ it can work with react or vue
 
 ## demo
 ```
-// register `updateQueryWord` method and it's triggered by `shared.update`
+// register `updateQueryWord` method and it's triggered by `shared.dispatch`
 let shared = createShared({
   `updateQueryWord`: (param: any, update: Function, dispatch: Function) => {
     // param = `queryWord 1`
@@ -22,7 +22,7 @@ shared.register({
   }
 });
 
-// update `queryWord` to `queryWord 2`
+// change `queryWord` to `queryWord 2`
 shared.update(`queryWord`, `queryWord 2`);
 
 // call `updateQueryWord`

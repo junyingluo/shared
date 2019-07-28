@@ -4,7 +4,7 @@ shared the data between different modules
 it can work with react or vue
 
 # demo
-
+```
 // register 'updateQueryWord method' and it's triggered by `shared.update`
 let shared = createShared({
   "updateQueryWord": (param: any, update: Function, dispatch: Function) => {
@@ -27,6 +27,7 @@ shared.update(`queryWord`, "queryWord 2");
 
 // call `updateQueryWord`
 shared.dispatch(`updateQueryWord`, "queryWord 1");
+```
 
 # api
 

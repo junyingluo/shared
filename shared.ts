@@ -6,6 +6,19 @@ interface IListener {
   [index: string]: (param: any) => void;
 }
 
+function error(format: string, ...args: string[]) {
+  if (format === undefined) return;
+  let argIndex = 0;
+  format = format.replace(/%s/g, () => {
+    if (args != undefined && argIndex < args.length) {
+      return args[argIndex++];
+    } else {
+      return ``;
+    }
+  });
+  throw new Error(format);
+}
+
 class Shared {
   listeners: IListener[] = [];
   cache = { data: {}, dispatch: {}, types: {} };
@@ -36,7 +49,7 @@ class Shared {
 
   update = (action: string, param: any) => {
     if (this.cache.types[action] == undefined) {
-      throw new Error(`update: unknown data type`);
+      error(`Shared.update: '%s' is unknown type`, action);
     }
     if (!this.needUpdate(this.cache.data, action, param)) return;
     this.listeners.map(listener => {

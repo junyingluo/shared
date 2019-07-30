@@ -1,9 +1,9 @@
 ## shared
 share the data between different modules
 
-it can work with react or vue
+work with react or vue
 
-it uses to instead of redux
+use to instead of redux
 
 ## demo
 ```
@@ -13,7 +13,7 @@ let shared = createShared({
     // param = `queryWord 1`
     update("queryWord", param);
   }
-})
+}, [`queryWord`])
 
 // register listener and it's called when `queryWord` changed
 shared.register({

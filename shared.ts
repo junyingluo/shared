@@ -8,11 +8,14 @@ interface IListener {
 
 class Shared {
   listeners: IListener[] = [];
-  cache = { data: {}, dispatch: {} };
+  cache = { data: {}, dispatch: {}, types: {} };
   handler: IHandler = {};
 
-  constructor(param: IHandler) {
+  constructor(param: IHandler, types: string[]) {
     this.handler = param;
+    types.map(value => {
+      this.cache.types[value] = {};
+    });
   }
 
   needUpdate = (cache: any, action: string, param: any) => {
@@ -21,7 +24,7 @@ class Shared {
       if (cache[action] == param) return false;
       if (
         typeof param === `object` &&
-        param.key &&
+        param.key != undefined &&
         cache[action].key == param.key
       ) {
         return false;
@@ -32,6 +35,9 @@ class Shared {
   };
 
   update = (action: string, param: any) => {
+    if (this.cache.types[action] == undefined) {
+      throw new Error(`update: unknown data type`);
+    }
     if (!this.needUpdate(this.cache.data, action, param)) return;
     this.listeners.map(listener => {
       if (this.cache.data[action] && listener[action]) {
@@ -63,6 +69,6 @@ class Shared {
   };
 }
 
-export function createShared(handler: IHandler) {
-  return new Shared(handler);
+export function createShared(handler: IHandler, types: string[]) {
+  return new Shared(handler, types);
 }

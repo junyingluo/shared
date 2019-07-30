@@ -3,6 +3,8 @@ share the data between different modules
 
 it can work with react or vue
 
+it uses to instead of redux
+
 ## demo
 ```
 // register `updateQueryWord` method and it's triggered by `shared.dispatch`

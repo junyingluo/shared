@@ -3,7 +3,7 @@ interface IHandler {
 }
 
 interface IListener {
-  [index: string]: (param?: any) => void;
+  [index: string]: (param: any) => void;
 }
 
 class Shared {
@@ -15,32 +15,46 @@ class Shared {
     this.handler = param;
   }
 
+  needUpdate = (cache: any, action: string, param: any) => {
+    if (param == undefined) return false;
+    if (cache[action] != undefined) {
+      if (cache[action] == param) return false;
+      if (
+        typeof param === `object` &&
+        param.key &&
+        cache[action].key == param.key
+      ) {
+        return false;
+      }
+    }
+    cache[action] = param;
+    return true;
+  };
+
   update = (action: string, param: any) => {
-    if (this.cache.data[action] == param) return;
-    this.cache.data[action] = param;
+    if (!this.needUpdate(this.cache.data, action, param)) return;
     this.listeners.map(listener => {
       if (this.cache.data[action] && listener[action]) {
-        listener[action](this.cache.data[action]);
+        listener[action](param);
       }
     });
   };
 
   dispatch = (action: string, param: any) => {
-    if (this.cache.dispatch[action] == param) return;
-    this.cache.dispatch[action] = param;
+    if (!this.needUpdate(this.cache.dispatch, action, param)) return;
     if (this.handler[action]) {
       this.handler[action](param, this.update, this.dispatch);
     }
   };
 
   register = (listener: IListener) => {
-    if (listener) {
+    if (listener != undefined) {
       this.listeners.push(listener);
     }
   };
 
   unregister = (listener: IListener) => {
-    if (listener) {
+    if (listener != undefined) {
       const i = this.listeners.indexOf(listener);
       if (i >= 0) {
         this.listeners.splice(i, 1);
